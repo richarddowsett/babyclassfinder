@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import logo from './logo.svg';
-import {Grid, Navbar, Jumbotron, Button, Nav, NavItem, MenuItem, NavDropdown} from 'react-bootstrap';
+import {Grid, Row, Col, Navbar, Jumbotron, Button, Nav, NavItem, MenuItem, NavDropdown} from 'react-bootstrap';
 import './App.css';
 
 class App extends Component {
@@ -8,22 +8,33 @@ class App extends Component {
     return (
       <div>
         <AppNav/>
-        <Jumbotron>
-          <Grid>
-            <h1>Welcome to React</h1>
-            <p>
-              <Button bsStyle="success" bsSize="large" href="http://react-bootstrap.github.io/components.html" target="_blank">
-                View React Bootstrap Docs
-              </Button>
-            </p>
-          </Grid>
-        </Jumbotron>
+        <Row className="show-grid">
+          <Col xs={3} md={3} lg={3}><code>&lt;{'Col xs={6} md={4}'} /&gt;</code></Col>
+          <Col xs={9} md={9} lg={8} lg-pull={1}><AppJumbotron/></Col>
+
+        </Row>
+
       </div>
     );
   }
 }
 
-
+class AppJumbotron extends Component {
+  render() {
+    return (
+      <Jumbotron>
+        <Grid>
+          <h1>Welcome to React</h1>
+          <p>
+            <Button bsStyle="success" bsSize="large" href="http://react-bootstrap.github.io/components.html" target="_blank">
+              View React Bootstrap Docs
+            </Button>
+          </p>
+        </Grid>
+      </Jumbotron>
+    )
+  }
+}
 
 class AppNav extends Component {
   render() {
