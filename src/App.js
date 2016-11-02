@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import logo from './logo.svg';
-import {Grid, Row, Col, Navbar, Jumbotron, Button, Nav, NavItem, MenuItem, NavDropdown} from 'react-bootstrap';
+import {Grid, Row, Col, Navbar, Jumbotron, Button, Nav, NavItem, MenuItem, NavDropdown,
+FormGroup, ControlLabel, FormControl, HelpBlock} from 'react-bootstrap';
 import './App.css';
 
 class App extends Component {
@@ -10,7 +11,9 @@ class App extends Component {
         <AppNav/>
         <Row className="show-grid">
           <Col xs={3} md={3} lg={3}><code>&lt;{'Col xs={6} md={4}'} /&gt;</code></Col>
-          <Col xs={9} md={9} lg={8} lg-pull={1}><AppJumbotron/></Col>
+          <Col xs={9} md={9} lg={8} lgPull={1}><AppJumbotron/>
+          <SearchForm/>
+          </Col>
 
         </Row>
 
@@ -18,6 +21,49 @@ class App extends Component {
     );
   }
 }
+
+const SearchForm = React.createClass( {
+  getInitialState() {
+    return {
+      value: '',
+      locationValue: ''
+
+    };
+  },
+
+  handleChange(e) {
+    this.setState({value: e.target.value});
+  },
+  handleLocationChange(e){
+    this.setState({locationValue: e.target.value})
+  },
+
+  render() {
+    return (
+      <form>
+              <FormGroup
+                controlId="searchForm"
+              >
+                <FormControl
+                  type="text"
+                  value={this.state.value}
+                  placeholder="Class names"
+                  onChange={this.handleChange}
+                />
+              <FormControl
+                type="text"
+                value={this.state.locationValue}
+                placeholder="Location"
+                onChange={this.handleLocationChange}
+                />
+                <FormControl.Feedback />
+              </FormGroup>
+            </form>
+
+
+    )
+  }
+})
 
 class AppJumbotron extends Component {
   render() {
