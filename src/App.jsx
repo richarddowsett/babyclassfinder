@@ -84,10 +84,38 @@ class SearchForm extends React.Component {
 
   render() {
     return (
-      <div><Button bsStyle="primary" key="Baby" onClick={this.handleChange.bind(this, "Baby")}>Baby</Button>
-      <Button bsStyle="primary" key="Pregnancy" onClick={this.handleChange.bind(this, "Pregnancy")}>Pregnancy</Button></div>
+      <div>
+        <FilterButton text="Baby" buttonClick={this.handleChange}/>
+      <FilterButton text="Pregnancy" buttonClick={this.handleChange}/></div>
     )
   }
+}
+
+class FilterButton extends React.Component {
+  constructor(props){
+    super(props)
+    this.state = {
+      active: true,
+      style: "primary"
+    }
+    this.handleChange = this.handleChange.bind(this)
+  }
+
+  handleChange(){
+    if(this.state.active){
+      this.setState({active: false, style: "info"})
+    }else{
+      this.setState({active: true, style: "primary"})
+    }
+    this.props.buttonClick(this.props.text)
+  }
+
+render(){
+  return(
+    <Button bsStyle={this.state.style} onClick={this.handleChange}>{this.props.text}</Button>
+  )
+}
+
 }
 
 class ResultsTabs extends React.Component{
