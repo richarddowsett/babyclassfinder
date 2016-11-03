@@ -106,10 +106,12 @@ class ResultsTabs extends React.Component{
     this.state = {
       key: 'list'
     }
+    this.handleSelect = this.handleSelect.bind(this)
   }
 
-  handleSelect(key) {
-    this.setState({key});
+  handleSelect(newKey) {
+    console.log('key ->' + newKey)
+    this.setState({key: newKey});
   }
 
   render() {
@@ -122,8 +124,7 @@ class ResultsTabs extends React.Component{
         filtered.push(c)
       }
     })
-    console.log('classes -> ' + this.props.classes)
-    console.log('filtered -> ' + filtered)
+    console.log('state -> ' + this.state.key)
     return (
       <Tabs activeKey={this.state.key} onSelect={this.handleSelect} id="controlled-tab-example">
         <Tab eventKey={"list"} title="List"><ListOfClasses classes={filtered}/></Tab>
