@@ -29,23 +29,35 @@ class Content extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      searchCategories: '',
+      categories: [],
       location: ''
     }
     this.handleSearchChange = this.handleSearchChange.bind(this)
   }
 
-  handleSearchChange(categories){
-    console.log('handle content search change -> ' + categories)
+  handleSearchChange(category){
+    console.log('handle content search change -> ' + category)
+    console.log('categories before' + this.state.categories.toString())
+    var categories = this.state.categories
+    var contains = false
+    this.state.categories.forEach(function(c){
+      contains = contains || c == category
+    })
+    if(contains){
+      var index = categories.indexOf(category)
+      categories.splice(index, 1)
+    } else{
+      categories.push(category.toString())
+    }
+    console.log('categories: ' + categories.toString())
     this.setState({searchCategories: categories})
   }
 
   render() {
-    console.log('content state => ' + this.state)
     return (
       <div>
       <Row className="show-grid">
-        <Col lg={4} lgPush={4} lgPull={4}><SearchForm searchValue={this.state.searchCategories} locationValue={this.state.location}
+        <Col lg={4} lgPush={4} lgPull={4}><SearchForm searchValue={this.state.categories} locationValue={this.state.location}
            onUserInput={this.handleSearchChange}/></Col>
       </Row>
       <Row className="show-grid">
@@ -62,8 +74,8 @@ class SearchForm extends React.Component {
   }
 
   handleChange(e) {
-    console.log('handle searchform change' + e.target.value)
-    this.props.onUserInput(e.target.value)
+    console.log('handle searchform change' + e)
+    this.props.onUserInput(e)
   }
   handleLocationChange(e){
     console.log('location change')
@@ -71,31 +83,9 @@ class SearchForm extends React.Component {
 
 
   render() {
-    console.log('search props: ' + this.props.searchValue)
     return (
-      <form>
-              <FormGroup
-                controlId="classNames"
-              >
-                <FormControl
-                  type="text"
-                  value={this.props.searchValue}
-                  placeholder="Class names"
-                  onChange={this.handleChange}
-                />
-            </FormGroup>
-            <FormGroup controlId="location">
-              <FormControl
-                type="text"
-                value={this.props.locationValue}
-                placeholder="Location"
-                onChange={this.handleLocationChange}
-                />
-                <FormControl.Feedback />
-              </FormGroup>
-            </form>
-
-
+      <div><Button bsStyle="primary" key="Baby" onClick={this.handleChange.bind(this, "Baby")}>Baby</Button>
+      <Button bsStyle="primary" key="Pregnancy" onClick={this.handleChange.bind(this, "Pregnancy")}>Pregnancy</Button></div>
     )
   }
 }
@@ -110,21 +100,25 @@ class ResultsTabs extends React.Component{
   }
 
   handleSelect(newKey) {
-    console.log('key ->' + newKey)
     this.setState({key: newKey});
   }
 
   render() {
-    console.log('filter => ' + this.props.filter)
-    var filter = this.props.filter
+    console.log(this.props.filter)
     var filtered = []
-     this.props.classes.forEach(function(c){
-      console.log(c.category + ' === ' + filter + ' = ' + (c.category === filter).toString())
-      if(c.category.toString() === filter.toString()){
-        filtered.push(c)
-      }
-    })
-    console.log('state -> ' + this.state.key)
+    var filter = this.props.filter
+    if(filter === undefined || filter.length === 0){
+      filtered = this.props.classes
+    }else {
+      this.props.classes.forEach(function(c){
+        console.log(c.category + filter.indexOf(c.category))
+        if(filter.indexOf(c.category) > -1){
+          filtered.push(c)
+        }
+      })
+    }
+
+    console.log('filtered -> ' + filtered)
     return (
       <Tabs activeKey={this.state.key} onSelect={this.handleSelect} id="controlled-tab-example">
         <Tab eventKey={"list"} title="List"><ListOfClasses classes={filtered}/></Tab>
@@ -136,7 +130,6 @@ class ResultsTabs extends React.Component{
 
 class ListOfClasses extends React.Component {
   render() {
-    console.log(this.props)
     var rows = []
     var count = 1
     this.props.classes.forEach(function(clazz){
