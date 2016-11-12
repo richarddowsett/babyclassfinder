@@ -5,7 +5,8 @@ import './App.css';
 
 var classes = [
   {category: 'Pregnancy', activity: 'yoga', postcode: 'CM1'},
-  {category: 'Baby', activity: 'massage', postcode: 'CM2'}
+  {category: 'Baby', activity: 'massage', postcode: 'CM2'},
+  {category: 'Toddler', activity: 'swimming', postcode: 'CM3'}
 ]
 
 class App extends Component {
@@ -28,19 +29,25 @@ class App extends Component {
 class Content extends React.Component{
   constructor(props){
     super(props);
+    var tempCategories = []
+    this.props.classes.forEach(function(c){
+      tempCategories.push(c.category)
+    })
     this.state = {
-      categories: [],
-      location: ''
+      searchCategories: [],
+      location: '',
+      allCategories: tempCategories
     }
     this.handleSearchChange = this.handleSearchChange.bind(this)
+
   }
 
   handleSearchChange(category){
     console.log('handle content search change -> ' + category)
-    console.log('categories before' + this.state.categories.toString())
-    var categories = this.state.categories
+    console.log('categories before' + this.state.searchCategories.toString())
+    var categories = this.state.searchCategories
     var contains = false
-    this.state.categories.forEach(function(c){
+    this.state.searchCategories.forEach(function(c){
       contains = contains || c == category
     })
     if(contains){
@@ -57,8 +64,7 @@ class Content extends React.Component{
     return (
       <div>
       <Row className="show-grid">
-        <Col lg={4} lgPush={4} lgPull={4}><SearchForm searchValue={this.state.categories} locationValue={this.state.location}
-           onUserInput={this.handleSearchChange}/></Col>
+        <Col lg={4} lgPush={4} lgPull={4}><SearchForm allCategories={this.state.allCategories} locationValue={this.state.location}  onUserInput={this.handleSearchChange}/></Col>
       </Row>
       <Row className="show-grid">
       <Col lgPush={2} lg={8} lgPull={2} md={8} mdPush={2} mdPull={2}><ResultsTabs filter={this.state.searchCategories} classes={this.props.classes}/></Col>
@@ -71,6 +77,9 @@ class SearchForm extends React.Component {
   constructor(props){
     super(props)
     this.handleChange = this.handleChange.bind(this);
+    this.state = {
+      handleChange: this.handleChange
+    }
   }
 
   handleChange(e) {
@@ -82,11 +91,17 @@ class SearchForm extends React.Component {
   }
 
 
+
   render() {
+    var buttonList = []
+    function createButton(changeFunc, category){
+      console.log("category -> " + category + " -> "+ "changeFunc" + changeFunc)
+      buttonList.push(<FilterButton key={category} text={category} buttonClick={changeFunc}/>)
+    }
+    this.props.allCategories.forEach(createButton.bind(null, this.handleChange))
     return (
       <div>
-        <FilterButton text="Baby" buttonClick={this.handleChange}/>
-      <FilterButton text="Pregnancy" buttonClick={this.handleChange}/></div>
+        {buttonList}</div>
     )
   }
 }
