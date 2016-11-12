@@ -4,7 +4,8 @@ import { Router, Route, browserHistory } from 'react-router'
 import App from './App';
 import './index.css';
 import 'bootstrap/dist/css/bootstrap.css';
-import 'bootstrap/dist/css/bootstrap-theme.css';
+//import 'bootstrap/dist/css/bootstrap-theme.css';
+import './theme.css';
 
 render((
   <Router history={browserHistory}>
