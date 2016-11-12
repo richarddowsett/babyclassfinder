@@ -1,10 +1,10 @@
 npm modules:
-bootstrap@3.3.7
-├── react@15.3.2
-├── react-bootstrap@0.30.6
-├── react-dom@15.3.2
-├── react-router@3.0.0
-└── react-scripts@0.7.0
+- bootstrap@3.3.7
+-  react@15.3.2
+- react-bootstrap@0.30.6
+- react-dom@15.3.2
+- react-router@3.0.0
+- react-scripts@0.7.0
 
 
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
