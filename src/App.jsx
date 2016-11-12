@@ -100,8 +100,10 @@ class SearchForm extends React.Component {
     }
     this.props.allCategories.forEach(createButton.bind(null, this.handleChange))
     return (
-      <div><ButtonGroup>
-        {buttonList}</ButtonGroup></div>
+      <Row>
+      <Col lgPush={2} lg={8} lgPull={2} md={8} mdPush={2} mdPull={2} xs={8} xsPush={2} xsPull={2}><ButtonGroup>
+        {buttonList}</ButtonGroup></Col>
+    </Row>
     )
   }
 }
@@ -127,7 +129,7 @@ class FilterButton extends React.Component {
 
 render(){
   return(
-    <Button onClick={this.handleChange}>{this.props.text}</Button>
+    <Button bsStyle={this.state.style} onClick={this.handleChange}>{this.props.text}</Button>
   )
 }
 
