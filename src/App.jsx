@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Grid, Row, Col, Navbar, Jumbotron, Button, Nav, NavItem, MenuItem, NavDropdown,
+import {Grid, Row, Col, Navbar, Jumbotron, Button, Nav, NavItem, MenuItem, NavDropdown, ButtonGroup,
 FormGroup, FormControl, Tabs, Tab} from 'react-bootstrap';
 import './App.css';
 
@@ -15,8 +15,8 @@ class App extends Component {
       <div>
         <AppNav/>
         <Row className="show-grid">
-          <Col xs={3} md={3} lg={3}><code>&lt;{'Col xs={6} md={4}'} /&gt;</code></Col>
-          <Col xs={9} md={9} lg={8} lgPull={1}><AppJumbotron/>
+          <Col xs={3} md={3}></Col>
+          <Col xs={12} md={8} lg={8} lgPull={1} mdPull={1}><AppJumbotron/>
 
           </Col>
         </Row>
@@ -64,7 +64,7 @@ class Content extends React.Component{
     return (
       <div>
       <Row className="show-grid">
-        <Col lg={4} lgPush={4} lgPull={4}><SearchForm allCategories={this.state.allCategories} locationValue={this.state.location}  onUserInput={this.handleSearchChange}/></Col>
+        <Col lg={4} lgPush={4} lgPull={4} md={4} mdPush={4} mdPull={2}><SearchForm allCategories={this.state.allCategories} locationValue={this.state.location}  onUserInput={this.handleSearchChange}/></Col>
       </Row>
       <Row className="show-grid">
       <Col lgPush={2} lg={8} lgPull={2} md={8} mdPush={2} mdPull={2}><ResultsTabs filter={this.state.searchCategories} classes={this.props.classes}/></Col>
@@ -100,8 +100,8 @@ class SearchForm extends React.Component {
     }
     this.props.allCategories.forEach(createButton.bind(null, this.handleChange))
     return (
-      <div>
-        {buttonList}</div>
+      <div><ButtonGroup>
+        {buttonList}</ButtonGroup></div>
     )
   }
 }
@@ -127,7 +127,7 @@ class FilterButton extends React.Component {
 
 render(){
   return(
-    <Button bsStyle={this.state.style} onClick={this.handleChange}>{this.props.text}</Button>
+    <Button onClick={this.handleChange}>{this.props.text}</Button>
   )
 }
 
@@ -176,11 +176,20 @@ class ListOfClasses extends React.Component {
     var rows = []
     var count = 1
     this.props.classes.forEach(function(clazz){
-      rows.push(<div key={count}><p>{clazz.activity} -> {clazz.category}</p></div>)
+      rows.push(<tr key={count}><td>{clazz.activity}</td><td> {clazz.category}</td></tr>)
       count += 1
     })
     return(
-      <div>{rows}</div>
+    <div>
+      <table className="table table-striped">
+          <thead>
+            <tr><th>Activity</th><th>Category</th></tr>
+          </thead>
+          <tbody>
+            {rows}
+          </tbody>
+      </table>
+    </div>
     )
   }
 }
@@ -190,12 +199,7 @@ class AppJumbotron extends Component {
     return (
       <Jumbotron>
         <Grid>
-          <h1>Welcome to React</h1>
-          <p>
-            <Button bsStyle="success" bsSize="large" href="http://react-bootstrap.github.io/components.html" target="_blank">
-              View React Bootstrap Docs
-            </Button>
-          </p>
+          <h1>Baby Class Finder</h1>
         </Grid>
       </Jumbotron>
     )
