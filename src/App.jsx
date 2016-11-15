@@ -1,13 +1,19 @@
 import React, {Component} from 'react';
-import {Grid, Row, Col, Navbar, Jumbotron, Button, Nav, NavItem, MenuItem, NavDropdown, ButtonGroup,
-FormGroup, FormControl, Tabs, Tab} from 'react-bootstrap';
+import {Grid, Row, Col, Navbar, Jumbotron, Button, Nav, NavItem, MenuItem, NavDropdown, ButtonGroup,Accordion,
+  Panel, FormGroup, FormControl, Tabs, Tab} from 'react-bootstrap';
 import './App.css';
 
 var classes = [
   {category: 'Pregnancy', activity: 'yoga', postcode: 'CM1'},
   {category: 'Baby', activity: 'massage', postcode: 'CM2'},
-  {category: 'Toddler', activity: 'swimming', postcode: 'CM3'}
+  {category: 'Baby', activity: 'sensory', postcode: 'blah'},
+  {category: 'Toddler', activity: 'swimming', postcode: 'CM3'},
+  {category: 'Toddler', activity: 'music', postcode: '123'}
 ]
+
+function unique(value, index, self){
+  return self.indexOf(value) === index;
+}
 
 class App extends Component {
   render() {
@@ -30,19 +36,41 @@ class Content extends React.Component{
   constructor(props){
     super(props);
     var tempCategories = []
+    var tempActivities = []
     this.props.classes.forEach(function(c){
       tempCategories.push(c.category)
+      tempActivities.push(c.activity)
     })
     this.state = {
       searchCategories: [],
+      searchActivities: [],
       location: '',
-      allCategories: tempCategories
+      allCategories: tempCategories.filter(unique),
+      allActivities: tempActivities.filter(unique)
     }
-    this.handleSearchChange = this.handleSearchChange.bind(this)
-
+    this.handleCategoryChange = this.handleCategoryChange.bind(this)
+    this.handleActivityChange = this.handleActivityChange.bind(this)
   }
 
-  handleSearchChange(category){
+  handleActivityChange(activity){
+    console.log('handle activty search change -> ' + activity)
+    console.log('activities before' + this.state.searchActivities.toString())
+    var activities = this.state.searchActivities
+    var contains = false
+    this.state.searchActivities.forEach(function(c){
+      contains = contains || c == activity
+    })
+    if(contains){
+      var index = activities.indexOf(activity)
+      activities.splice(index, 1)
+    } else{
+      activities.push(activity.toString())
+    }
+    console.log('activities: ' + activities.toString())
+    this.setState({searchActivities: activities})
+  }
+
+  handleCategoryChange(category){
     console.log('handle content search change -> ' + category)
     console.log('categories before' + this.state.searchCategories.toString())
     var categories = this.state.searchCategories
@@ -64,10 +92,14 @@ class Content extends React.Component{
     return (
       <div>
       <Row className="show-grid">
-        <Col lg={4} lgPush={4} lgPull={4} md={4} mdPush={4} mdPull={2}><SearchForm allCategories={this.state.allCategories} locationValue={this.state.location}  onUserInput={this.handleSearchChange}/></Col>
+        <Col lg={4} lgPush={4} lgPull={4} md={4} mdPush={4} mdPull={2}><SearchForm allCategories={this.state.allCategories}
+          allActivities={this.state.allActivities} locationValue={this.state.location}  onCategoryChange={this.handleCategoryChange}
+          onActivityChange={this.handleActivityChange}/></Col>
       </Row>
       <Row className="show-grid">
-      <Col lgPush={2} lg={8} lgPull={2} md={8} mdPush={2} mdPull={2}><ResultsTabs filter={this.state.searchCategories} classes={this.props.classes}/></Col>
+      <Col lgPush={2} lg={8} lgPull={2} md={8} mdPush={2} mdPull={2}>
+        <ResultsTabs categoryFilter={this.state.searchCategories} activityFilter={this.state.searchActivities} classes={this.props.classes}/>
+      </Col>
       </Row>
     </div>
   )}
@@ -77,15 +109,19 @@ class SearchForm extends React.Component {
   constructor(props){
     super(props)
     this.handleChange = this.handleChange.bind(this);
-    this.state = {
-      handleChange: this.handleChange
-    }
+    this.handleActivityChange = this.handleActivityChange.bind(this);
   }
 
   handleChange(e) {
     console.log('handle searchform change' + e)
-    this.props.onUserInput(e)
+    this.props.onCategoryChange(e)
   }
+
+  handleActivityChange(e){
+    console.log('handle activity change' + e)
+    this.props.onActivityChange(e)
+  }
+
   handleLocationChange(e){
     console.log('location change')
   }
@@ -93,15 +129,34 @@ class SearchForm extends React.Component {
 
 
   render() {
-    var buttonList = []
+    var categoryButtonList = []
     function createButton(changeFunc, category){
       console.log("category -> " + category + " -> "+ "changeFunc" + changeFunc)
-      buttonList.push(<FilterButton key={category} text={category} buttonClick={changeFunc}/>)
+      categoryButtonList.push(<FilterButton key={category} text={category} buttonClick={changeFunc}/>)
     }
     this.props.allCategories.forEach(createButton.bind(null, this.handleChange))
+    var activityButtonList = []
+    function createActivityButton(changeFunc, activity){
+      console.log("activity -> " + activity + " -> " + "changeFunc" + changeFunc)
+      activityButtonList.push(<FilterButton key={activity} text={activity} buttonClick={changeFunc}/>)
+    }
+    this.props.allActivities.forEach(createActivityButton.bind(null, this.handleActivityChange))
+
     return (
-      <div><ButtonGroup>
-        {buttonList}</ButtonGroup></div>
+      <div>
+        <Accordion>
+          <Panel header="Categories" eventKey="1">
+            <ButtonGroup>
+              {categoryButtonList}
+            </ButtonGroup>
+          </Panel>
+      <Panel header="Activity" eventKey="2">
+        <ButtonGroup>
+          {activityButtonList}
+        </ButtonGroup>
+      </Panel>
+      </Accordion>
+    </div>
     )
   }
 }
@@ -147,20 +202,18 @@ class ResultsTabs extends React.Component{
   }
 
   render() {
-    console.log(this.props.filter)
-    var filtered = []
-    var filter = this.props.filter
-    if(filter === undefined || filter.length === 0){
-      filtered = this.props.classes
-    }else {
-      this.props.classes.forEach(function(c){
-        console.log(c.category + filter.indexOf(c.category))
-        if(filter.indexOf(c.category) > -1){
-          filtered.push(c)
-        }
+    var categoryFilter = this.props.categoryFilter
+    var activityFilter = this.props.activityFilter
+    var filtered = this.props.classes.filter(function(c){
+      if(categoryFilter === undefined || categoryFilter.length === 0)
+      return true;
+        return categoryFilter.indexOf(c.category) > -1
       })
-    }
-
+    filtered = filtered.filter(function(c){
+      if(activityFilter === undefined || activityFilter.length == 0)
+      return true;
+      return activityFilter.indexOf(c.activity) > -1
+    })
     console.log('filtered -> ' + filtered)
     return (
       <Tabs activeKey={this.state.key} onSelect={this.handleSelect} id="controlled-tab-example">
