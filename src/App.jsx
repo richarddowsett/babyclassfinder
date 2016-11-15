@@ -90,18 +90,15 @@ class Content extends React.Component{
 
   render() {
     return (
-      <div>
-      <Row className="show-grid">
-        <Col lg={4} lgPush={4} lgPull={4} md={4} mdPush={4} mdPull={2}><SearchForm allCategories={this.state.allCategories}
-          allActivities={this.state.allActivities} locationValue={this.state.location}  onCategoryChange={this.handleCategoryChange}
-          onActivityChange={this.handleActivityChange}/></Col>
-      </Row>
-      <Row className="show-grid">
       <Col lgPush={2} lg={8} lgPull={2} md={8} mdPush={2} mdPull={2}>
+        <SearchForm allCategories={this.state.allCategories}
+          allActivities={this.state.allActivities} locationValue={this.state.location}  onCategoryChange={this.handleCategoryChange}
+          onActivityChange={this.handleActivityChange}/>
+      <Row className="show-grid">
+
         <ResultsTabs categoryFilter={this.state.searchCategories} activityFilter={this.state.searchActivities} classes={this.props.classes}/>
-      </Col>
       </Row>
-    </div>
+    </Col>
   )}
 }
 
@@ -143,20 +140,27 @@ class SearchForm extends React.Component {
     this.props.allActivities.forEach(createActivityButton.bind(null, this.handleActivityChange))
 
     return (
-      <div>
-        <Accordion>
-          <Panel header="Categories" eventKey="1">
-            <ButtonGroup>
-              {categoryButtonList}
-            </ButtonGroup>
+      <Row className="show-grid">
+        <Col lg={8} md={8}>
+          <Accordion>
+            <Panel header="Categories" eventKey="1">
+              <ButtonGroup>
+                {categoryButtonList}
+              </ButtonGroup>
+            </Panel>
+            <Panel header="Activity" eventKey="2">
+              <ButtonGroup>
+                {activityButtonList}
+              </ButtonGroup>
+            </Panel>
+          </Accordion>
+        </Col>
+        <Col lg={4} md={4}>
+          <Panel header="Days">
+            blah
           </Panel>
-      <Panel header="Activity" eventKey="2">
-        <ButtonGroup>
-          {activityButtonList}
-        </ButtonGroup>
-      </Panel>
-      </Accordion>
-    </div>
+        </Col>
+      </Row>
     )
   }
 }
