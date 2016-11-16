@@ -51,7 +51,7 @@ class Content extends React.Component{
       location: '',
       allCategories: tempCategories.filter(unique),
       allActivities: tempActivities.filter(unique),
-      filterOpen: true
+      filterOpen: false
     }
     this.handleCategoryChange = this.handleCategoryChange.bind(this)
     this.handleActivityChange = this.handleActivityChange.bind(this)
@@ -101,7 +101,9 @@ class Content extends React.Component{
   render() {
     return (
       <Col lgPush={2} lg={8} lgPull={2} md={8} mdPush={2} mdPull={2}>
-        <Button onClick={this.toggleFilter}>Filter</Button>
+        <Row>
+<Col>
+          <a href="#" onClick={this.toggleFilter}>Filter</a></Col></Row>
         <ReactCollapse isOpened={this.state.filterOpen}>
         <SearchForm allCategories={this.state.allCategories}
           allActivities={this.state.allActivities} locationValue={this.state.location}  onCategoryChange={this.handleCategoryChange}
@@ -209,7 +211,7 @@ class ResultsTabs extends React.Component{
   constructor(props){
     super(props)
     this.state = {
-      key: 'list'
+      key: 'map'
     }
     this.handleSelect = this.handleSelect.bind(this)
   }
@@ -242,8 +244,8 @@ class ResultsTabs extends React.Component{
     console.log('filtered -> ' + filtered)
     return (
       <Tabs activeKey={this.state.key} onSelect={this.handleSelect} id="controlled-tab-example">
-        <Tab eventKey={"list"} title="List"><ListOfClasses classes={filtered}/></Tab>
         <Tab eventKey={"map"} title="Map"><div id="mapid"></div></Tab>
+        <Tab eventKey={"list"} title="List"><ListOfClasses classes={filtered}/></Tab>
       </Tabs>
     );
   }
