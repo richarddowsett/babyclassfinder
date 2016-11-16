@@ -2,6 +2,9 @@ import React, {Component} from 'react';
 import {Grid, Row, Col, Navbar, Jumbotron, Button, Nav, NavItem, MenuItem, NavDropdown, ButtonGroup,Accordion,
   Panel, FormGroup, FormControl, Tabs, Tab} from 'react-bootstrap';
 import './App.css';
+import 'leaflet/dist/leaflet.js';
+import L from 'leaflet/dist/leaflet.js'
+import 'leaflet/dist/leaflet.css';
 
 var classes = [
   {category: 'Pregnancy', activity: 'yoga', postcode: 'CM1'},
@@ -205,6 +208,14 @@ class ResultsTabs extends React.Component{
     this.setState({key: newKey});
   }
 
+  componentDidMount() {
+    var mymap = L.map('mapid').setView([51.505, -0.09], 13);
+    L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+        maxZoom: 18
+    }).addTo(mymap);
+  }
+
   render() {
     var categoryFilter = this.props.categoryFilter
     var activityFilter = this.props.activityFilter
@@ -222,7 +233,7 @@ class ResultsTabs extends React.Component{
     return (
       <Tabs activeKey={this.state.key} onSelect={this.handleSelect} id="controlled-tab-example">
         <Tab eventKey={"list"} title="List"><ListOfClasses classes={filtered}/></Tab>
-        <Tab eventKey={"map"} title="Map"><p>Map of results</p></Tab>
+        <Tab eventKey={"map"} title="Map"><div id="mapid"></div></Tab>
       </Tabs>
     );
   }
