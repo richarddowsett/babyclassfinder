@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Grid, Row, Col, Navbar, Jumbotron, Button, Nav, NavItem, MenuItem, NavDropdown, ButtonGroup,Accordion,
   Panel, FormGroup, FormControl, Tabs, Tab} from 'react-bootstrap';
+import ReactCollapse from 'react-collapse';
 import './App.css';
 import 'leaflet/dist/leaflet.js';
 import L from 'leaflet/dist/leaflet.js'
@@ -49,10 +50,12 @@ class Content extends React.Component{
       searchActivities: [],
       location: '',
       allCategories: tempCategories.filter(unique),
-      allActivities: tempActivities.filter(unique)
+      allActivities: tempActivities.filter(unique),
+      filterOpen: true
     }
     this.handleCategoryChange = this.handleCategoryChange.bind(this)
     this.handleActivityChange = this.handleActivityChange.bind(this)
+    this.toggleFilter = this.toggleFilter.bind(this)
   }
 
   handleActivityChange(activity){
@@ -91,12 +94,19 @@ class Content extends React.Component{
     this.setState({searchCategories: categories})
   }
 
+  toggleFilter(){
+    this.state.filterOpen ? this.setState({filterOpen: false}) : this.setState({filterOpen:true})
+  }
+
   render() {
     return (
       <Col lgPush={2} lg={8} lgPull={2} md={8} mdPush={2} mdPull={2}>
+        <Button onClick={this.toggleFilter}>Filter</Button>
+        <ReactCollapse isOpened={this.state.filterOpen}>
         <SearchForm allCategories={this.state.allCategories}
           allActivities={this.state.allActivities} locationValue={this.state.location}  onCategoryChange={this.handleCategoryChange}
           onActivityChange={this.handleActivityChange}/>
+        </ReactCollapse>
       <Row className="show-grid">
 
         <ResultsTabs categoryFilter={this.state.searchCategories} activityFilter={this.state.searchActivities} classes={this.props.classes}/>
