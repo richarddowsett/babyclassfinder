@@ -6,6 +6,7 @@ import './App.css';
 import 'leaflet/dist/leaflet.js';
 import L from 'leaflet/dist/leaflet.js'
 import 'leaflet/dist/leaflet.css';
+import LOAD_CLASSES from './ActionTypes.js'
 
 var classes = [
   {category: 'Pregnancy', activity: 'yoga', postcode: 'CM1'},
@@ -139,7 +140,6 @@ class SearchForm extends React.Component {
   }
 
 
-
   render() {
     var categoryButtonList = []
     function createButton(changeFunc, category){
@@ -214,10 +214,15 @@ class ResultsTabs extends React.Component{
       key: 'map'
     }
     this.handleSelect = this.handleSelect.bind(this)
+    this.loadClasses = this.loadClasses.bind(this)
   }
 
   handleSelect(newKey) {
     this.setState({key: newKey});
+  }
+
+  loadClasses(lat, long) {
+    console.log(lat + " -> " + long)
   }
 
   componentDidMount() {
@@ -226,6 +231,12 @@ class ResultsTabs extends React.Component{
         attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
         maxZoom: 18
     }).addTo(mymap);
+    var classesFunc = this.loadClasses
+    mymap.on('moveend', function(event){
+      console.log(event.type)
+      console.log(mymap.getCenter())
+      dispatch(classesFunc(mymap.getCenter().lat, mymap.getCenter().lng))
+    })
   }
 
   render() {

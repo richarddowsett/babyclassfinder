@@ -1,0 +1,3 @@
+const LOAD_CLASSES = 'LOAD_CLASSES'
+
+export LOAD_CLASSES
