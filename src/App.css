@@ -14,6 +14,10 @@
   color: white;
 }
 
+#mapid {
+  height: 400px;
+}
+
 .App-intro {
   font-size: large;
 }
