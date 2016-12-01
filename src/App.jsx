@@ -2,11 +2,15 @@ import React, {Component} from 'react';
 import {Grid, Row, Col, Navbar, Jumbotron, Button, Nav, NavItem, MenuItem, NavDropdown, ButtonGroup,Accordion,
   Panel, FormGroup, FormControl, Tabs, Tab} from 'react-bootstrap';
 import ReactCollapse from 'react-collapse';
+import createLoadAllClasses from './ActionTypes';
 import './App.css';
 import 'leaflet/dist/leaflet.js';
 import L from 'leaflet/dist/leaflet.js'
 import 'leaflet/dist/leaflet.css';
-import LOAD_CLASSES from './ActionTypes.js'
+import {createStore} from 'redux'
+import appReduce from './reducer'
+
+let store = createStore(appReduce)
 
 var classes = [
   {category: 'Pregnancy', activity: 'yoga', postcode: 'CM1'},
@@ -21,6 +25,7 @@ function unique(value, index, self){
 }
 
 class App extends Component {
+
   render() {
     return (
       <div>
@@ -140,6 +145,7 @@ class SearchForm extends React.Component {
   }
 
 
+
   render() {
     var categoryButtonList = []
     function createButton(changeFunc, category){
@@ -201,7 +207,7 @@ class FilterButton extends React.Component {
 
 render(){
   return(
-    <Button bsStyle={this.state.style} onClick={this.handleChange}>{this.props.text}</Button>
+    <Button onClick={this.handleChange}>{this.props.text}</Button>
   )
 }
 
@@ -214,15 +220,10 @@ class ResultsTabs extends React.Component{
       key: 'map'
     }
     this.handleSelect = this.handleSelect.bind(this)
-    this.loadClasses = this.loadClasses.bind(this)
   }
 
   handleSelect(newKey) {
     this.setState({key: newKey});
-  }
-
-  loadClasses(lat, long) {
-    console.log(lat + " -> " + long)
   }
 
   componentDidMount() {
@@ -231,12 +232,6 @@ class ResultsTabs extends React.Component{
         attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
         maxZoom: 18
     }).addTo(mymap);
-    var classesFunc = this.loadClasses
-    mymap.on('moveend', function(event){
-      console.log(event.type)
-      console.log(mymap.getCenter())
-      dispatch(classesFunc(mymap.getCenter().lat, mymap.getCenter().lng))
-    })
   }
 
   render() {
@@ -289,7 +284,7 @@ class AppJumbotron extends Component {
   render() {
     return (
       <Jumbotron>
-        <Grid>
+        <Grid>systm
           <h1>Baby Class Finder</h1>
         </Grid>
       </Jumbotron>
