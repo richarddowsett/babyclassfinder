@@ -1,8 +1,9 @@
-const LOAD_ALL_CLASSES = 'LOAD_ALL_CLASSES'
+export const LOAD_ALL_CLASSES = 'LOAD_ALL_CLASSES'
 
-const UPDATE_LOCATION = 'UPDATE_LOCATION'
+export const UPDATE_LOCATION = 'UPDATE_LOCATION'
 
-function createLoadAllClasses() {
+
+export const createLoadAllClasses = () => {
   return {
     type: LOAD_ALL_CLASSES
   }

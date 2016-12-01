@@ -1,30 +1,67 @@
-import React, {Component} from 'react';
-import {Grid, Row, Col, Navbar, Jumbotron, Button, Nav, NavItem, MenuItem, NavDropdown, ButtonGroup,Accordion,
-  Panel, FormGroup, FormControl, Tabs, Tab} from 'react-bootstrap';
+import React, {Component, PropTypes} from 'react';
+import {
+  Grid,
+  Row,
+  Col,
+  Navbar,
+  Jumbotron,
+  Button,
+  Nav,
+  NavItem,
+  MenuItem,
+  NavDropdown,
+  ButtonGroup,
+  Accordion,
+  Panel,
+  FormGroup,
+  FormControl,
+  Tabs,
+  Tab
+} from 'react-bootstrap';
 import ReactCollapse from 'react-collapse';
 import createLoadAllClasses from './ActionTypes';
 import './App.css';
 import 'leaflet/dist/leaflet.js';
 import L from 'leaflet/dist/leaflet.js'
 import 'leaflet/dist/leaflet.css';
-import {createStore} from 'redux'
-import appReduce from './reducer'
+import {connect} from 'react-redux'
 
-let store = createStore(appReduce)
+import ResultsTabsComponent from './ResultsTabComponent'
+
+
 
 var classes = [
-  {category: 'Pregnancy', activity: 'yoga', postcode: 'CM1'},
-  {category: 'Baby', activity: 'massage', postcode: 'CM2'},
-  {category: 'Baby', activity: 'sensory', postcode: 'blah'},
-  {category: 'Toddler', activity: 'swimming', postcode: 'CM3'},
-  {category: 'Toddler', activity: 'music', postcode: '123'}
+  {
+    category: 'Pregnancy',
+    activity: 'yoga',
+    postcode: 'CM1'
+  }, {
+    category: 'Baby',
+    activity: 'massage',
+    postcode: 'CM2'
+  }, {
+    category: 'Baby',
+    activity: 'sensory',
+    postcode: 'blah'
+  }, {
+    category: 'Toddler',
+    activity: 'swimming',
+    postcode: 'CM3'
+  }, {
+    category: 'Toddler',
+    activity: 'music',
+    postcode: '123'
+  }
 ]
 
-function unique(value, index, self){
+function unique(value, index, self) {
   return self.indexOf(value) === index;
 }
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+  }
 
   render() {
     return (
@@ -38,16 +75,16 @@ class App extends Component {
         </Row>
         <Content classes={classes}/>
       </div>
-     );
+    );
   }
 }
 
-class Content extends React.Component{
-  constructor(props){
+class Content extends React.Component {
+  constructor(props) {
     super(props);
     var tempCategories = []
     var tempActivities = []
-    this.props.classes.forEach(function(c){
+    this.props.classes.forEach(function(c) {
       tempCategories.push(c.category)
       tempActivities.push(c.activity)
     })
@@ -64,67 +101,71 @@ class Content extends React.Component{
     this.toggleFilter = this.toggleFilter.bind(this)
   }
 
-  handleActivityChange(activity){
+  handleActivityChange(activity) {
     console.log('handle activty search change -> ' + activity)
     console.log('activities before' + this.state.searchActivities.toString())
     var activities = this.state.searchActivities
     var contains = false
-    this.state.searchActivities.forEach(function(c){
+    this.state.searchActivities.forEach(function(c) {
       contains = contains || c == activity
     })
-    if(contains){
+    if (contains) {
       var index = activities.indexOf(activity)
       activities.splice(index, 1)
-    } else{
+    } else {
       activities.push(activity.toString())
     }
     console.log('activities: ' + activities.toString())
     this.setState({searchActivities: activities})
   }
 
-  handleCategoryChange(category){
+  handleCategoryChange(category) {
     console.log('handle content search change -> ' + category)
     console.log('categories before' + this.state.searchCategories.toString())
     var categories = this.state.searchCategories
     var contains = false
-    this.state.searchCategories.forEach(function(c){
+    this.state.searchCategories.forEach(function(c) {
       contains = contains || c == category
     })
-    if(contains){
+    if (contains) {
       var index = categories.indexOf(category)
       categories.splice(index, 1)
-    } else{
+    } else {
       categories.push(category.toString())
     }
     console.log('categories: ' + categories.toString())
     this.setState({searchCategories: categories})
   }
 
-  toggleFilter(){
-    this.state.filterOpen ? this.setState({filterOpen: false}) : this.setState({filterOpen:true})
+  toggleFilter() {
+    this.state.filterOpen
+      ? this.setState({filterOpen: false})
+      : this.setState({filterOpen: true})
   }
 
   render() {
     return (
       <Col lgPush={2} lg={8} lgPull={2} md={8} mdPush={2} mdPull={2}>
         <Row>
-<Col>
-          <a href="#" onClick={this.toggleFilter}>Filter</a></Col></Row>
+          <Col>
+            <a href="#" onClick={this.toggleFilter}>Filter</a>
+          </Col>
+        </Row>
         <ReactCollapse isOpened={this.state.filterOpen}>
-        <SearchForm allCategories={this.state.allCategories}
-          allActivities={this.state.allActivities} locationValue={this.state.location}  onCategoryChange={this.handleCategoryChange}
-          onActivityChange={this.handleActivityChange}/>
+          <SearchForm allCategories={this.state.allCategories} allActivities={this.state.allActivities} locationValue={this.state.location} onCategoryChange={this.handleCategoryChange} onActivityChange={this.handleActivityChange}/>
         </ReactCollapse>
-      <Row className="show-grid">
+        <Row className="show-grid">
 
-        <ResultsTabs categoryFilter={this.state.searchCategories} activityFilter={this.state.searchActivities} classes={this.props.classes}/>
-      </Row>
-    </Col>
-  )}
+
+          <ResultsTabsComponent/>
+        </Row>
+      </Col>
+    )
+  }
 }
 
 class SearchForm extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props)
     this.handleChange = this.handleChange.bind(this);
     this.handleActivityChange = this.handleActivityChange.bind(this);
@@ -135,28 +176,42 @@ class SearchForm extends React.Component {
     this.props.onCategoryChange(e)
   }
 
-  handleActivityChange(e){
+  handleActivityChange(e) {
     console.log('handle activity change' + e)
     this.props.onActivityChange(e)
   }
 
-  handleLocationChange(e){
+  handleLocationChange(e) {
     console.log('location change')
   }
 
-
-
   render() {
     var categoryButtonList = []
-    function createButton(changeFunc, category){
-      console.log("category -> " + category + " -> "+ "changeFunc" + changeFunc)
-      categoryButtonList.push(<FilterButton key={category} text={category} buttonClick={changeFunc}/>)
+    function createButton(changeFunc, category) {
+      console.log("category -> " + category + " -> " + "changeFunc" + changeFunc)
+      categoryButtonList.push(< FilterButton key = {
+        category
+      }
+      text = {
+        category
+      }
+      buttonClick = {
+        changeFunc
+      } />)
     }
     this.props.allCategories.forEach(createButton.bind(null, this.handleChange))
     var activityButtonList = []
-    function createActivityButton(changeFunc, activity){
+    function createActivityButton(changeFunc, activity) {
       console.log("activity -> " + activity + " -> " + "changeFunc" + changeFunc)
-      activityButtonList.push(<FilterButton key={activity} text={activity} buttonClick={changeFunc}/>)
+      activityButtonList.push(< FilterButton key = {
+        activity
+      }
+      text = {
+        activity
+      }
+      buttonClick = {
+        changeFunc
+      } />)
     }
     this.props.allActivities.forEach(createActivityButton.bind(null, this.handleActivityChange))
 
@@ -187,7 +242,7 @@ class SearchForm extends React.Component {
 }
 
 class FilterButton extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props)
     this.state = {
       active: true,
@@ -196,88 +251,25 @@ class FilterButton extends React.Component {
     this.handleChange = this.handleChange.bind(this)
   }
 
-  handleChange(){
-    if(this.state.active){
+  handleChange() {
+    if (this.state.active) {
       this.setState({active: false, style: "info"})
-    }else{
+    } else {
       this.setState({active: true, style: "primary"})
     }
     this.props.buttonClick(this.props.text)
   }
 
-render(){
-  return(
-    <Button onClick={this.handleChange}>{this.props.text}</Button>
-  )
-}
-
-}
-
-class ResultsTabs extends React.Component{
-  constructor(props){
-    super(props)
-    this.state = {
-      key: 'map'
-    }
-    this.handleSelect = this.handleSelect.bind(this)
-  }
-
-  handleSelect(newKey) {
-    this.setState({key: newKey});
-  }
-
-  componentDidMount() {
-    var mymap = L.map('mapid').setView([51.505, -0.09], 13);
-    L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
-        maxZoom: 18
-    }).addTo(mymap);
-  }
-
   render() {
-    var categoryFilter = this.props.categoryFilter
-    var activityFilter = this.props.activityFilter
-    var filtered = this.props.classes.filter(function(c){
-      if(categoryFilter === undefined || categoryFilter.length === 0)
-      return true;
-        return categoryFilter.indexOf(c.category) > -1
-      })
-    filtered = filtered.filter(function(c){
-      if(activityFilter === undefined || activityFilter.length == 0)
-      return true;
-      return activityFilter.indexOf(c.activity) > -1
-    })
-    console.log('filtered -> ' + filtered)
     return (
-      <Tabs activeKey={this.state.key} onSelect={this.handleSelect} id="controlled-tab-example">
-        <Tab eventKey={"map"} title="Map"><div id="mapid"></div></Tab>
-        <Tab eventKey={"list"} title="List"><ListOfClasses classes={filtered}/></Tab>
-      </Tabs>
-    );
-  }
-}
-
-class ListOfClasses extends React.Component {
-  render() {
-    var rows = []
-    var count = 1
-    this.props.classes.forEach(function(clazz){
-      rows.push(<tr key={count}><td>{clazz.activity}</td><td> {clazz.category}</td></tr>)
-      count += 1
-    })
-    return(
-    <div>
-      <table className="table table-striped">
-          <thead>
-            <tr><th>Activity</th><th>Category</th></tr>
-          </thead>
-          <tbody>
-            {rows}
-          </tbody>
-      </table>
-    </div>
+      <Button onClick={this.handleChange}>{this.props.text}</Button>
     )
   }
+
+}
+
+FilterButton.propTypes = {
+  buttonClick: PropTypes.func.isRequired
 }
 
 class AppJumbotron extends Component {
@@ -296,30 +288,30 @@ class AppNav extends Component {
   render() {
     return (
       <Navbar inverse collapseOnSelect>
-    <Navbar.Header>
-      <Navbar.Brand>
-        <a href="#">React-Bootstrap</a>
-      </Navbar.Brand>
-      <Navbar.Toggle />
-    </Navbar.Header>
-    <Navbar.Collapse>
-      <Nav>
-        <NavItem eventKey={1} href="#">Link</NavItem>
-        <NavItem eventKey={2} href="#">Link</NavItem>
-        <NavDropdown eventKey={3} title="Dropdown" id="basic-nav-dropdown">
-          <MenuItem eventKey={3.1}>Action</MenuItem>
-          <MenuItem eventKey={3.2}>Another action</MenuItem>
-          <MenuItem eventKey={3.3}>Something else here</MenuItem>
-          <MenuItem divider />
-          <MenuItem eventKey={3.3}>Separated link</MenuItem>
-        </NavDropdown>
-      </Nav>
-      <Nav pullRight>
-        <NavItem eventKey={1} href="#">Link Right</NavItem>
-        <NavItem eventKey={2} href="#">Link Right</NavItem>
-      </Nav>
-    </Navbar.Collapse>
-  </Navbar>
+        <Navbar.Header>
+          <Navbar.Brand>
+            <a href="#">React-Bootstrap</a>
+          </Navbar.Brand>
+          <Navbar.Toggle/>
+        </Navbar.Header>
+        <Navbar.Collapse>
+          <Nav>
+            <NavItem eventKey={1} href="#">Link</NavItem>
+            <NavItem eventKey={2} href="#">Link</NavItem>
+            <NavDropdown eventKey={3} title="Dropdown" id="basic-nav-dropdown">
+              <MenuItem eventKey={3.1}>Action</MenuItem>
+              <MenuItem eventKey={3.2}>Another action</MenuItem>
+              <MenuItem eventKey={3.3}>Something else here</MenuItem>
+              <MenuItem divider/>
+              <MenuItem eventKey={3.3}>Separated link</MenuItem>
+            </NavDropdown>
+          </Nav>
+          <Nav pullRight>
+            <NavItem eventKey={1} href="#">Link Right</NavItem>
+            <NavItem eventKey={2} href="#">Link Right</NavItem>
+          </Nav>
+        </Navbar.Collapse>
+      </Navbar>
     )
   }
 }
