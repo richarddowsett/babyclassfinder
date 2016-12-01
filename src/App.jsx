@@ -25,6 +25,7 @@ import 'leaflet/dist/leaflet.js';
 import L from 'leaflet/dist/leaflet.js'
 import 'leaflet/dist/leaflet.css';
 import {connect} from 'react-redux'
+import {toggleCategory, toggleActivity} from './ActionTypes'
 
 import ResultsTabsComponent from './ResultsTabComponent'
 
@@ -59,8 +60,16 @@ function unique(value, index, self) {
 }
 
 class App extends Component {
-  constructor(props) {
-    super(props);
+  constructor(props, context) {
+    super(props, context);
+    this.store = props.store || context.store
+
+    console.log(
+      `Could not find "store" in either the context or ` +
+      `props of "App". ` +
+      `Either wrap the root component in a <Provider>, ` +
+      `or explicitly pass "store" as a prop to "App".`
+    )
   }
 
   render() {
@@ -73,15 +82,15 @@ class App extends Component {
 
           </Col>
         </Row>
-        <Content classes={classes}/>
+        <Content classes={classes} store={this.store}/>
       </div>
     );
   }
 }
 
 class Content extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor(props, context) {
+    super(props, context);
     var tempCategories = []
     var tempActivities = []
     this.props.classes.forEach(function(c) {
@@ -103,38 +112,12 @@ class Content extends React.Component {
 
   handleActivityChange(activity) {
     console.log('handle activty search change -> ' + activity)
-    console.log('activities before' + this.state.searchActivities.toString())
-    var activities = this.state.searchActivities
-    var contains = false
-    this.state.searchActivities.forEach(function(c) {
-      contains = contains || c == activity
-    })
-    if (contains) {
-      var index = activities.indexOf(activity)
-      activities.splice(index, 1)
-    } else {
-      activities.push(activity.toString())
-    }
-    console.log('activities: ' + activities.toString())
-    this.setState({searchActivities: activities})
+    this.props.store.dispatch(toggleActivity(activity))
   }
 
   handleCategoryChange(category) {
     console.log('handle content search change -> ' + category)
-    console.log('categories before' + this.state.searchCategories.toString())
-    var categories = this.state.searchCategories
-    var contains = false
-    this.state.searchCategories.forEach(function(c) {
-      contains = contains || c == category
-    })
-    if (contains) {
-      var index = categories.indexOf(category)
-      categories.splice(index, 1)
-    } else {
-      categories.push(category.toString())
-    }
-    console.log('categories: ' + categories.toString())
-    this.setState({searchCategories: categories})
+    this.props.store.dispatch(toggleCategory(category))
   }
 
   toggleFilter() {

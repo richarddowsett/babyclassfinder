@@ -12,14 +12,17 @@ import appReduce from './reducer'
 
 let store = createStore(appReduce)
 
-render((
+render(
   <Provider store={store}>
-  <Router history={browserHistory}>
-    <Route path="/" component={App}>
-    </Route>
-  </Router>
-  </Provider>
-), document.getElementById('root'))
+    <App store={store}/>
+    </Provider>
+    /*research Provider and context*/
+  /*<Router history={browserHistory}>
+    //<Route path="/" component={App}>
+  //  </Route>
+  //</Router>*/
+
+, document.getElementById('root'))
 //ReactDOM.render(<App/>  ,
   //document.getElementById('root')
 //);
