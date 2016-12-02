@@ -1,29 +1,18 @@
-import React, {Component, PropTypes} from 'react';
+import React, {Component} from 'react';
 import {
   Grid,
   Row,
   Col,
   Navbar,
   Jumbotron,
-  Button,
   Nav,
   NavItem,
   MenuItem,
-  NavDropdown,
-  ButtonGroup,
-  Accordion,
-  Panel,
-  FormGroup,
-  FormControl,
-  Tabs,
-  Tab
+  NavDropdown
 } from 'react-bootstrap';
 import ReactCollapse from 'react-collapse';
 import './App.css';
-import 'leaflet/dist/leaflet.js';
-import L from 'leaflet/dist/leaflet.js'
 import 'leaflet/dist/leaflet.css';
-import {connect} from 'react-redux'
 import {toggleCategory, toggleActivity} from './ActionTypes'
 import {createLoadAllClasses} from './ActionTypes'
 import ResultsTabsComponent from './ResultsTabComponent'
