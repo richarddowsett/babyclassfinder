@@ -19,14 +19,13 @@ import {
   Tab
 } from 'react-bootstrap';
 import ReactCollapse from 'react-collapse';
-import createLoadAllClasses from './ActionTypes';
 import './App.css';
 import 'leaflet/dist/leaflet.js';
 import L from 'leaflet/dist/leaflet.js'
 import 'leaflet/dist/leaflet.css';
 import {connect} from 'react-redux'
 import {toggleCategory, toggleActivity} from './ActionTypes'
-
+import {createLoadAllClasses} from './ActionTypes'
 import ResultsTabsComponent from './ResultsTabComponent'
 
 
@@ -70,6 +69,10 @@ class App extends Component {
       `Either wrap the root component in a <Provider>, ` +
       `or explicitly pass "store" as a prop to "App".`
     )
+  }
+
+  componentDidMount(){
+    this.store.dispatch(createLoadAllClasses())
   }
 
   render() {
