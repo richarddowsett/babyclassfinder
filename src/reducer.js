@@ -1,3 +1,20 @@
+import {REQUEST_CLASSES, RECEIVE_CLASSES} from './ActionTypes'
+/*
+sample state:
+{
+  location: {
+  lat: 123,
+  lng: 456
+  },
+  babyClasses: [],
+  categoryFilter: [],
+  activityFilter: [],
+  react: {
+    isLoading: false
+}
+
+}
+*/
 
 function location(state, action) {
   if (typeof state === 'undefined')
@@ -20,6 +37,9 @@ function babyClassesFunc(state, action) {
   if (typeof state === 'undefined')
     return []
   switch (action.type) {
+    case RECEIVE_CLASSES:
+      console.log("received baby classes state: RECEIVE_CLASSES")
+      return action.babyClasses
     case "LOAD_ALL_CLASSES":
       console.log('received a dispatched LOAD_ALL_CLASSES')
       return [{
@@ -88,13 +108,35 @@ function categoryFilter(state, action) {
   }
 }
 
+function updateReact(state, action){
+  if(typeof state === 'undefined')
+  return {
+    isLoading: false
+  }
+  switch (action.type){
+    case REQUEST_CLASSES:
+    console.log("requesting classes: REQUEST_CLASSES")
+    return {
+      isLoading: true
+    }
+    case RECEIVE_CLASSES:
+    console.log("received classes in react object: RECEIVE_CLASSES")
+    return {
+      isLoading: false
+    }
+    default:
+    return state
+  }
+}
+
 function appReduce(state = {}, action) {
   console.log('reducer triggered')
   return {
     location: location(state.location, action),
     babyClasses: babyClassesFunc(state.babyClasses, action),
     categoryFilter: categoryFilter(state.categoryFilter, action),
-    activityFilter: activityFilter(state.activityFilter, action)
+    activityFilter: activityFilter(state.activityFilter, action),
+    react: updateReact(state.react, action)
   }
 }
 

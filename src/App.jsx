@@ -14,7 +14,7 @@ import ReactCollapse from 'react-collapse';
 import './App.css';
 import 'leaflet/dist/leaflet.css';
 import {toggleCategory, toggleActivity} from './ActionTypes'
-import {createLoadAllClasses} from './ActionTypes'
+import {createLoadAllClasses, fetchClasses} from './ActionTypes'
 import ResultsTabsComponent from './ResultsTabComponent'
 import FilterBarComponent from './FilterBarComponent'
 
@@ -60,7 +60,7 @@ class App extends Component {
   }
 
   componentDidMount(){
-    this.store.dispatch(createLoadAllClasses())
+    this.store.dispatch(fetchClasses({lat: 123,lng:456}))
   }
 
   render() {
