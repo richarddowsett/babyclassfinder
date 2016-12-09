@@ -17,50 +17,40 @@ import {toggleCategory, toggleActivity} from './ActionTypes'
 import {createLoadAllClasses, fetchClasses} from './ActionTypes'
 import ResultsTabsComponent from './ResultsTabComponent'
 import FilterBarComponent from './FilterBarComponent'
+import {connect} from 'react-redux'
+import {AppNav, AppJumbotron} from './Util'
 
+function appFunc(dispatchFetchClasses){
+  return <App fetchClasses={dispatchFetchClasses}/>
+}
 
-
-var classes = [
-  {
-    category: 'Pregnancy',
-    activity: 'yoga',
-    postcode: 'CM1'
-  }, {
-    category: 'Baby',
-    activity: 'massage',
-    postcode: 'CM2'
-  }, {
-    category: 'Baby',
-    activity: 'sensory',
-    postcode: 'blah'
-  }, {
-    category: 'Toddler',
-    activity: 'swimming',
-    postcode: 'CM3'
-  }, {
-    category: 'Toddler',
-    activity: 'music',
-    postcode: '123'
+const mapStateToProps = (state) => {
+  return {
   }
-]
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    dispatchFetchClasses: (lat,lng) => {
+      console.log('sending dispatch for fetchClasses')
+      dispatch(fetchClasses({lat: lat,lng:lng}))
+    }
+  }
+}
 
 
+const AppComponent = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(appFunc)
 
 class App extends Component {
   constructor(props, context) {
     super(props, context);
-    this.store = props.store || context.store
-
-    console.log(
-      `Could not find "store" in either the context or ` +
-      `props of "App". ` +
-      `Either wrap the root component in a <Provider>, ` +
-      `or explicitly pass "store" as a prop to "App".`
-    )
   }
 
   componentDidMount(){
-    this.store.dispatch(fetchClasses({lat: 123,lng:456}))
+    this.props.fetchClasses.dispatchFetchClasses(123,456)
   }
 
   render() {
@@ -73,11 +63,39 @@ class App extends Component {
 
           </Col>
         </Row>
-        <Content classes={classes} store={this.store}/>
+        <Content store={this.store}/>
       </div>
     );
   }
 }
+
+function contentFunc(dispatchToggleActivity,dispatchToggleCategory) {
+  return <Content dispatchToggleActivity={dispatchToggleActivity} dispatchToggleCategory={dispatchToggleCategory}/>
+}
+
+const mapContentStateToProps = (state) => {
+  return {
+  }
+}
+
+const mapContentDispatchToProps = (dispatch) => {
+  return {
+    dispatchToggleActivity: (activity) => {
+      console.log('sending dispatch for activity $activity')
+      dispatch(toggleActivity(activity))
+    },
+    dispatchToggleCategory: (category) => {
+      console.log('sending dispach for category $category')
+      dispatch(toggleCategory(category))
+    }
+  }
+}
+
+
+const ContentComponent = connect(
+  mapContentStateToProps,
+  mapContentDispatchToProps
+)(contentFunc)
 
 class Content extends React.Component {
   constructor(props, context) {
@@ -133,48 +151,5 @@ class Content extends React.Component {
 
 
 
-class AppJumbotron extends Component {
-  render() {
-    return (
-      <Jumbotron>
-        <Grid>systm
-          <h1>Baby Class Finder</h1>
-        </Grid>
-      </Jumbotron>
-    )
-  }
-}
 
-class AppNav extends Component {
-  render() {
-    return (
-      <Navbar inverse collapseOnSelect>
-        <Navbar.Header>
-          <Navbar.Brand>
-            <a href="#">React-Bootstrap</a>
-          </Navbar.Brand>
-          <Navbar.Toggle/>
-        </Navbar.Header>
-        <Navbar.Collapse>
-          <Nav>
-            <NavItem eventKey={1} href="#">Link</NavItem>
-            <NavItem eventKey={2} href="#">Link</NavItem>
-            <NavDropdown eventKey={3} title="Dropdown" id="basic-nav-dropdown">
-              <MenuItem eventKey={3.1}>Action</MenuItem>
-              <MenuItem eventKey={3.2}>Another action</MenuItem>
-              <MenuItem eventKey={3.3}>Something else here</MenuItem>
-              <MenuItem divider/>
-              <MenuItem eventKey={3.3}>Separated link</MenuItem>
-            </NavDropdown>
-          </Nav>
-          <Nav pullRight>
-            <NavItem eventKey={1} href="#">Link Right</NavItem>
-            <NavItem eventKey={2} href="#">Link Right</NavItem>
-          </Nav>
-        </Navbar.Collapse>
-      </Navbar>
-    )
-  }
-}
-
-export default App;
+export default AppComponent;

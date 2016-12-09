@@ -5,13 +5,14 @@ import './App.css';
 import 'leaflet/dist/leaflet.js';
 import L from 'leaflet/dist/leaflet.js'
 import 'leaflet/dist/leaflet.css';
+import 'leaflet-search/dist/leaflet-search.min.css'
 import {connect} from 'react-redux'
 
 
 
 
-const resultsTabsFunc = ({classes, categoryFilter, activityFilter, loadClasses}) => {
-return  <ResultsTabs tempDispatch={loadClasses} categoryFilter={categoryFilter} activityFilter={activityFilter} classes={classes}/>
+const resultsTabsFunc = ({classes, categoryFilter, activityFilter}) => {
+return  <ResultsTabs categoryFilter={categoryFilter} activityFilter={activityFilter} classes={classes}/>
 }
 
 class ResultsTabs extends React.Component{
@@ -21,12 +22,6 @@ class ResultsTabs extends React.Component{
       key: 'map'
     }
     this.handleSelect = this.handleSelect.bind(this)
-    this.handleDispatch = this.handleDispatch.bind(this)
-  }
-
-  handleDispatch(){
-    console.log("handleDispatch")
-    this.props.tempDispatch()
   }
 
   handleSelect(newKey) {
@@ -34,11 +29,13 @@ class ResultsTabs extends React.Component{
   }
 
   componentDidMount() {
-    var mymap = L.map('mapid').setView([51.505, -0.09], 13);
+
+    var mymap = new L.map('mapid').setView([51.505, -0.09], 13);
     L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
         maxZoom: 18
     }).addTo(mymap);
+
   }
 
   render() {
@@ -99,11 +96,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    loadClasses: () => {
-      console.log('sending dispatch for loadAllClasses')
-      dispatch(createLoadAllClasses())
-    }
-  }
+      }
 }
 
 const ResultsTabsComponent = connect(
