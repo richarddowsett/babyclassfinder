@@ -14,9 +14,10 @@ import {
   FormGroup,
   Button,ControlLabel,HelpBlock
 } from 'react-bootstrap';
+import {createAddClass} from '../ActionTypes'
 
-function contentFunc() {
-  return <AdminContent/>
+function contentFunc(props) {
+  return <AdminContent dispatchAddClass={props.dispatchAddClass}/>
 }
 
 const mapStateToProps = (state) => {
@@ -27,7 +28,10 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-
+      dispatchAddClass: (clazz) => {
+        console.log("firing add class event: $clazz")
+        dispatch(createAddClass(clazz))
+      }
   }
 }
 
@@ -40,12 +44,29 @@ class AdminContent extends Component {
   constructor(props, context){
     super(props, context)
     this.state = {
-      value: ''
+      activity: '',
+      category: ''
     }
+    this.addClass = this.addClass.bind(this)
   }
 
-  handleChange(e) {
-    this.setState({ value: e.target.value });
+  handleChange(key,e) {
+    var newState = {}
+    newState[key] = e.target.value
+    this.setState(newState);
+  }
+
+  addClass(){
+    console.log(JSON.stringify({
+      category: this.state.category,
+      activity: this.state.activity,
+      postcode: this.state.postcode
+    }))
+this.props.dispatchAddClass({
+  category: this.state.category,
+  activity: this.state.activity,
+  postcode: this.state.postcode
+})
   }
 
   getValidationState() {
@@ -63,22 +84,37 @@ class AdminContent extends Component {
         <Row className="show-grid">
 
 <Col>
-          <div><form>
+          <div><form id="newClass">
         <FormGroup
           controlId="formBasicText"
-          validationState={this.getValidationState()}
+
         >
-          <ControlLabel>Working example with validation</ControlLabel>
+        <ControlLabel>Category</ControlLabel>
+        <FormControl
+          type="text"
+          value={this.state.value}
+          placeholder="Category"
+          onChange={this.handleChange.bind(this, "category")}
+        />
+        <FormControl.Feedback />
+          <ControlLabel>Activity</ControlLabel>
           <FormControl
             type="text"
             value={this.state.value}
-            placeholder="Enter text"
-            onChange={this.handleChange}
+            placeholder="Activity"
+            onChange={this.handleChange.bind(this, "activity")}
           />
           <FormControl.Feedback />
-          <HelpBlock>Validation is based on string length.</HelpBlock>
+            <ControlLabel>Postcode</ControlLabel>
+            <FormControl
+              type="text"
+              value={this.state.value}
+              placeholder="Postcode"
+              onChange={this.handleChange.bind(this, "postcode")}
+            />
+            <FormControl.Feedback />
         </FormGroup>
-        <Button type="submit">Submit</Button>
+        <Button onClick={this.addClass}>Submit</Button>
       </form></div></Col>
         </Row>
       </Col>
