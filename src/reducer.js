@@ -6,7 +6,17 @@ sample state:
   lat: 123,
   lng: 456
   },
-  babyClasses: [],
+  babyClasses: [{
+  category: x,
+  activity: y,
+  address: {
+  number: 1,
+  street: x,
+  town: x,
+  city: x,
+  postcode: xxx
+}
+}],
   categoryFilter: [],
   activityFilter: [],
   react: {
@@ -40,21 +50,6 @@ function babyClassesFunc(state, action) {
     case RECEIVE_CLASSES:
       console.log("received baby classes state: RECEIVE_CLASSES")
       return action.babyClasses
-    case "LOAD_ALL_CLASSES":
-      console.log('received a dispatched LOAD_ALL_CLASSES')
-      return [{
-        category: "Pregnancy",
-        activity: "Yoga",
-        postcode: "CM1"
-      },{
-        category: "Pregnancy",
-        activity: "AquaFit",
-        postcode: "CM3"
-      },{
-        category: "Baby",
-        activity: "Massage",
-        postcode: "CM3"
-      }]
     default:
       return state
   }

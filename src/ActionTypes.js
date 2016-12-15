@@ -1,6 +1,6 @@
 import fetch from 'isomorphic-fetch'
 
-export const LOAD_ALL_CLASSES = 'LOAD_ALL_CLASSES'
+
 export const TOGGLE_CATEGORY_FILTER = 'TOGGLE_CATEGORY_FILTER'
 export const UPDATE_LOCATION = 'UPDATE_LOCATION'
 export const TOGGLE_ACTIVITY_FILTER = 'TOGGLE_ACTIVITY_FILTER'
@@ -69,12 +69,6 @@ export function fetchClasses(location) {
 
   }
 
-}
-
-export const createLoadAllClasses = () => {
-  return {
-    type: LOAD_ALL_CLASSES
-  }
 }
 
 export const toggleCategory = (category) => {
