@@ -45,7 +45,13 @@ class AdminContent extends Component {
     super(props, context)
     this.state = {
       activity: '',
-      category: ''
+      category: '',
+      address: {
+        house: '',
+        town: '',
+        city: '',
+        postcode: ''
+      }
     }
     this.addClass = this.addClass.bind(this)
   }
@@ -56,16 +62,22 @@ class AdminContent extends Component {
     this.setState(newState);
   }
 
+  handleAddressChange(key, e){
+    var newAddress = this.state.address
+    newAddress[key] = e.target.value
+    this.setState({address: newAddress})
+  }
+
   addClass(){
     console.log(JSON.stringify({
       category: this.state.category,
       activity: this.state.activity,
-      postcode: this.state.postcode
+      address: this.state.address
     }))
 this.props.dispatchAddClass({
   category: this.state.category,
   activity: this.state.activity,
-  postcode: this.state.postcode
+  address: this.state.address
 })
   }
 
@@ -104,13 +116,42 @@ this.props.dispatchAddClass({
             placeholder="Activity"
             onChange={this.handleChange.bind(this, "activity")}
           />
+        </FormGroup>
+        <FormGroup>
+          <FormControl.Feedback />
+        <ControlLabel>House/Building</ControlLabel>
+            <FormControl
+              type="text"
+              value={this.state.value}
+              placeholder="House/Building"
+              onChange={this.handleAddressChange.bind(this, "house")}
+            />
+            <FormControl.Feedback />
+              <FormControl.Feedback />
+            <ControlLabel>Town</ControlLabel>
+                <FormControl
+                  type="text"
+                  value={this.state.value}
+                  placeholder="Town"
+                  onChange={this.handleAddressChange.bind(this, "town")}
+                />
+                <FormControl.Feedback />
+                  <FormControl.Feedback />
+                <ControlLabel>City</ControlLabel>
+                    <FormControl
+                      type="text"
+                      value={this.state.value}
+                      placeholder="City"
+                      onChange={this.handleAddressChange.bind(this, "city")}
+                    />
+                    <FormControl.Feedback />
           <FormControl.Feedback />
             <ControlLabel>Postcode</ControlLabel>
             <FormControl
               type="text"
               value={this.state.value}
               placeholder="Postcode"
-              onChange={this.handleChange.bind(this, "postcode")}
+              onChange={this.handleAddressChange.bind(this, "postcode")}
             />
             <FormControl.Feedback />
         </FormGroup>
