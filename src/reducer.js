@@ -1,4 +1,4 @@
-import {REQUEST_CLASSES, RECEIVE_CLASSES, ADDRESS_VERIFIED, ADDRESS_VERIFIED_FAILED} from './ActionTypes'
+import {REQUEST_CLASSES, RECEIVE_CLASSES, ADDRESS_VERIFIED, ADDRESS_VERIFIED_FAILED, ADMIN_CREATION_FAILED,ADD_CLASS} from './ActionTypes'
 /*
 sample state:
 {
@@ -136,6 +136,8 @@ function updateAdmin(state, action){
     return {
       addressVerified: false,
       addressVerificationError: false,
+      adminFailed: false,
+      classAdded: false,
       location: {
         lat: 0,
         lng: 0
@@ -143,22 +145,36 @@ function updateAdmin(state, action){
     }
     switch(action.type){
       case ADDRESS_VERIFIED_FAILED:
+      case ADMIN_CREATION_FAILED:
         console.log("received ADDRESS_VERIFIED_FAILED")
         return ({
           addressVerificationError: true,
           addressVerified: false,
+          adminFailed: false,
+          classAdded: false,
           location: {
             lat: 0,
             lng: 0
           }
         })
+        case ADD_CLASS:
+        console.log('received ADD_CLASS')
+        return ({
+          addressVerified: true,
+          addressVerificationError: false,
+          adminFailed: false,
+          classAdded: true
+        })
       case ADDRESS_VERIFIED:
       console.log("received ADDRESS_VERIFIED")
         return ({
-          addressVerified: state.success,
-          location: state.location
+          addressVerified: action.success,
+          addressVerificationError: false,
+          adminFailed: false,
+          classAdded: false,
+          location: action.location
         })
-      default:
+              default:
         return state
     }
 }

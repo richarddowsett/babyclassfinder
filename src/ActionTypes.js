@@ -11,118 +11,143 @@ export const CLASS_ADDED = 'CLASS_ADDED'
 export const VERIFY_ADDRESS = 'VERIFY_ADDRESS'
 export const ADDRESS_VERIFIED = 'ADDRESS_VERIFIED'
 export const ADDRESS_VERIFIED_FAILED = 'ADDRESS_VERIFIED_FAILED'
+export const ADMIN_CREATION_FAILED = 'ADMIN_CREATION_FAILED'
 
 export function createVerifyAddress(address) {
-  return function(dispatch){
-    fetch('http://localhost:9000/address', {
-      method: 'POST',
-      headers :{
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(address)
-    })
-    .then(response => response.json())
-    .then(json => dispatch(createAddressVerified(json)))
-    .catch(err => {console.log('caught an error while verifying address: ' + err)
-  dispatch(createAddressVerificationFailed())})
-  }
+	return function(dispatch) {
+		var addressString = address.house + ',' + address.city + ',' + "essex" // add county to address
+		var requestBody = {
+			address: addressString
+		}
+		var geocoder = new window.google.maps.Geocoder()
+		geocoder.geocode({
+			address: addressString
+		}, function(results, status) {
+			if (status === 'OK') {
+				if (results.length === 1) {
+					var tmp = createAddressVerified(results[0])
+					dispatch(createAddressVerified(results[0]))
+				} else {
+					console.log("found more than one result for request: " + requestBody + " with status: " + status)
+					dispatch(createAddressVerificationFailed())
+				}
+			} else {
+				console.log("returned with status: " + status)
+				dispatch(createAddressVerificationFailed())
+			}
+		})
+	}
+}
+
+const createAdminCreationError = () => {
+	return ({
+		type: ADMIN_CREATION_FAILED
+	})
 }
 
 const createAddressVerificationFailed = () => {
-  return ({
-    type: ADDRESS_VERIFIED_FAILED
-  })
+	return ({
+		type: ADDRESS_VERIFIED_FAILED
+	})
 }
 
 const createAddressVerified = (json) => {
-  return ({
-    type: ADDRESS_VERIFIED,
-    success: json.success,
-    location: json.location
-  })
+	var lat = json.geometry.location.lat()
+	var lng = json.geometry.location.lng()
+	return ({
+		type: ADDRESS_VERIFIED,
+		success: true,
+		location: {
+			lat: lat,
+			lng: lng
+		}
+	})
 }
 
 const createClassAdded = (json) => {
-  return ({
-    type: CLASS_ADDED,
-    success: json.success
-  })
+	return ({
+		type: CLASS_ADDED,
+		success: json.success
+	})
 }
 
 export function createAddClass(clazz) {
-  return function(dispatch) {
-    dispatch(createDispatchAddClass(clazz))
+	return function(dispatch) {
+		dispatch(createDispatchAddClass(clazz))
 
-    fetch('http://localhost:9000/classes', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(clazz)
-    })
-    .then(response => response.json())
-    .then( json => dispatch( createClassAdded(json) ))
-    .catch( err => console.log(err) )
-  }
+		fetch('http://localhost:9000/classes', {
+				method: 'POST',
+				headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(clazz)
+			})
+			.then(response => response.json())
+			.then(json =>{
+				if (json.success === false) {
+					dispatch(createAdminCreationError())
+				} else {
+					dispatch(createClassAdded(json)				)}})
+			.catch(err => dispatch(createAdminCreationError()))
+	}
 }
 
 export const createDispatchAddClass = (clazz) => {
-  return {
-    type: ADD_CLASS,
-    babyClass: clazz
-  }
+	return {
+		type: ADD_CLASS,
+		babyClass: clazz
+	}
 }
 
 
 export const createRequestClasses = (location) => {
-  return {
-    type: REQUEST_CLASSES,
-    location
-  }
+	return {
+		type: REQUEST_CLASSES,
+		location
+	}
 }
 
 export const createReceiveClasses = (location, json) => {
-  return {
-    type: RECEIVE_CLASSES,
-    location: location,
-    babyClasses: json,
-    receivedAt: Date.now()
-  }
+	return {
+		type: RECEIVE_CLASSES,
+		location: location,
+		babyClasses: json,
+		receivedAt: Date.now()
+	}
 }
 
 export function fetchClasses(location) {
 
-  return function(dispatch) {
+	return function(dispatch) {
 
-    dispatch(createRequestClasses(location))
+		dispatch(createRequestClasses(location))
 
-    return fetch('http://localhost:9000').then(response => response.json())
-      .then(json => dispatch(createReceiveClasses(location, json)))
+		return fetch('http://localhost:9000').then(response => response.json())
+			.then(json => dispatch(createReceiveClasses(location, json)))
 
-  }
+	}
 
 }
 
 export const toggleCategory = (category) => {
-  return {
-    type: TOGGLE_CATEGORY_FILTER,
-    category: category
-  }
+	return {
+		type: TOGGLE_CATEGORY_FILTER,
+		category: category
+	}
 }
 
 export const toggleActivity = (activity) => {
-  return {
-    type: TOGGLE_ACTIVITY_FILTER,
-    activity: activity
-  }
+	return {
+		type: TOGGLE_ACTIVITY_FILTER,
+		activity: activity
+	}
 }
 
 function createUpdateLocation(_lat, _lng) {
-  return {
-    type: UPDATE_LOCATION,
-    lat: _lat,
-    lng: _lng
-  }
+	return {
+		type: UPDATE_LOCATION,
+		lat: _lat,
+		lng: _lng
+	}
 }
