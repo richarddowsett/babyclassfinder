@@ -8,6 +8,40 @@ export const REQUEST_CLASSES = 'REQUEST_CLASSES'
 export const RECEIVE_CLASSES = 'RECEIVE_CLASSES'
 export const ADD_CLASS = 'ADD_CLASS'
 export const CLASS_ADDED = 'CLASS_ADDED'
+export const VERIFY_ADDRESS = 'VERIFY_ADDRESS'
+export const ADDRESS_VERIFIED = 'ADDRESS_VERIFIED'
+export const ADDRESS_VERIFIED_FAILED = 'ADDRESS_VERIFIED_FAILED'
+
+export function createVerifyAddress(address) {
+  return function(dispatch){
+    fetch('http://localhost:9000/address', {
+      method: 'POST',
+      headers :{
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(address)
+    })
+    .then(response => response.json())
+    .then(json => dispatch(createAddressVerified(json)))
+    .catch(err => {console.log('caught an error while verifying address: ' + err)
+  dispatch(createAddressVerificationFailed())})
+  }
+}
+
+const createAddressVerificationFailed = () => {
+  return ({
+    type: ADDRESS_VERIFIED_FAILED
+  })
+}
+
+const createAddressVerified = (json) => {
+  return ({
+    type: ADDRESS_VERIFIED,
+    success: json.success,
+    location: json.location
+  })
+}
 
 const createClassAdded = (json) => {
   return ({

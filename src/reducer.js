@@ -1,4 +1,4 @@
-import {REQUEST_CLASSES, RECEIVE_CLASSES} from './ActionTypes'
+import {REQUEST_CLASSES, RECEIVE_CLASSES, ADDRESS_VERIFIED, ADDRESS_VERIFIED_FAILED} from './ActionTypes'
 /*
 sample state:
 {
@@ -21,6 +21,13 @@ sample state:
   activityFilter: [],
   react: {
     isLoading: false
+},
+admin {
+addressVerified: false,
+location: {
+lat: 123,
+lng: 456
+}
 }
 
 }
@@ -124,6 +131,38 @@ function updateReact(state, action){
   }
 }
 
+function updateAdmin(state, action){
+  if(typeof state === 'undefined')
+    return {
+      addressVerified: false,
+      addressVerificationError: false,
+      location: {
+        lat: 0,
+        lng: 0
+      }
+    }
+    switch(action.type){
+      case ADDRESS_VERIFIED_FAILED:
+        console.log("received ADDRESS_VERIFIED_FAILED")
+        return ({
+          addressVerificationError: true,
+          addressVerified: false,
+          location: {
+            lat: 0,
+            lng: 0
+          }
+        })
+      case ADDRESS_VERIFIED:
+      console.log("received ADDRESS_VERIFIED")
+        return ({
+          addressVerified: state.success,
+          location: state.location
+        })
+      default:
+        return state
+    }
+}
+
 function appReduce(state = {}, action) {
   console.log('reducer triggered')
   return {
@@ -131,7 +170,8 @@ function appReduce(state = {}, action) {
     babyClasses: babyClassesFunc(state.babyClasses, action),
     categoryFilter: categoryFilter(state.categoryFilter, action),
     activityFilter: activityFilter(state.activityFilter, action),
-    react: updateReact(state.react, action)
+    react: updateReact(state.react, action),
+    admin: updateAdmin(state.admin, action)
   }
 }
 

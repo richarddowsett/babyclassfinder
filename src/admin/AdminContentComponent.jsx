@@ -14,15 +14,17 @@ import {
   FormGroup,
   Button,ControlLabel,HelpBlock
 } from 'react-bootstrap';
-import {createAddClass} from '../ActionTypes'
+import {createAddClass, createVerifyAddress} from '../ActionTypes'
 
 function contentFunc(props) {
-  return <AdminContent dispatchAddClass={props.dispatchAddClass}/>
+  return <AdminContent dispatchAddClass={props.dispatchAddClass} dispatchVerifyAddress={props.dispatchVerifyAddress}/>
 }
 
 const mapStateToProps = (state) => {
   return {
-
+addressVerified: state.admin.addressVerified,
+addressVerificationError: state.admin.addressVerificationError,
+location: state.admin.location
   }
 }
 
@@ -31,6 +33,10 @@ const mapDispatchToProps = (dispatch) => {
       dispatchAddClass: (clazz) => {
         console.log("firing add class event: $clazz")
         dispatch(createAddClass(clazz))
+      },
+      dispatchVerifyAddress: (address) => {
+        console.log("firing verify address")
+        dispatch(createVerifyAddress(address))
       }
   }
 }
@@ -51,9 +57,15 @@ class AdminContent extends Component {
         town: '',
         city: '',
         postcode: ''
-      }
+      },
+      location: props.location
     }
     this.addClass = this.addClass.bind(this)
+    this.verifyAddress  = this.verifyAddress.bind(this)
+  }
+
+  verifyAddress(){
+    this.props.dispatchVerifyAddress(this.state.address)
   }
 
   handleChange(key,e) {
@@ -62,10 +74,12 @@ class AdminContent extends Component {
     this.setState(newState);
   }
 
-  handleAddressChange(key, e){
-    var newAddress = this.state.address
-    newAddress[key] = e.target.value
-    this.setState({address: newAddress})
+  handleObjectChange(obj,key, e){
+    var object = this.state[obj]
+    object[key] = e.target.value
+    var newState = {}
+    newState[obj] = object
+    this.setState(newState)
   }
 
   addClass(){
@@ -91,7 +105,7 @@ this.props.dispatchAddClass({
   render(){
     return (
       <Col lgPush={2} lg={8} lgPull={2} md={8} mdPush={2} mdPull={2}>
-
+        
 
         <Row className="show-grid">
 
@@ -124,7 +138,7 @@ this.props.dispatchAddClass({
               type="text"
               value={this.state.value}
               placeholder="House/Building"
-              onChange={this.handleAddressChange.bind(this, "house")}
+              onChange={this.handleObjectChange.bind(this, "address","house")}
             />
             <FormControl.Feedback />
               <FormControl.Feedback />
@@ -133,7 +147,7 @@ this.props.dispatchAddClass({
                   type="text"
                   value={this.state.value}
                   placeholder="Town"
-                  onChange={this.handleAddressChange.bind(this, "town")}
+                  onChange={this.handleObjectChange.bind(this,"address", "town")}
                 />
                 <FormControl.Feedback />
                   <FormControl.Feedback />
@@ -142,7 +156,7 @@ this.props.dispatchAddClass({
                       type="text"
                       value={this.state.value}
                       placeholder="City"
-                      onChange={this.handleAddressChange.bind(this, "city")}
+                      onChange={this.handleObjectChange.bind(this,"address", "city")}
                     />
                     <FormControl.Feedback />
           <FormControl.Feedback />
@@ -151,7 +165,27 @@ this.props.dispatchAddClass({
               type="text"
               value={this.state.value}
               placeholder="Postcode"
-              onChange={this.handleAddressChange.bind(this, "postcode")}
+              onChange={this.handleObjectChange.bind(this,"address", "postcode")}
+            />
+            <FormControl.Feedback />
+            <Button onClick={this.verifyAddress}>Verify Address</Button>
+            <p>{this.props.addressVerified}</p>
+        </FormGroup>
+        <FormGroup>
+          <ControlLabel>Lat</ControlLabel>
+          <FormControl
+            type="text"
+            value={this.state.value}
+            placeholder="Lat"
+            onChange={this.handleObjectChange.bind(this,"location", "lat")}
+          />
+          <FormControl.Feedback />
+            <ControlLabel>Lng</ControlLabel>
+            <FormControl
+              type="text"
+              value={this.state.value}
+              placeholder="Lng"
+              onChange={this.handleObjectChange.bind(this,"location", "lng")}
             />
             <FormControl.Feedback />
         </FormGroup>
