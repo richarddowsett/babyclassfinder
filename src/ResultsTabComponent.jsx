@@ -8,6 +8,7 @@ import {Map, Marker, Popup, TileLayer} from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-search/dist/leaflet-search.min.css'
 import {connect} from 'react-redux'
+import {MyMarkersList, MyPopupMarker} from './Marker'
 
 const resultsTabsFunc = ({classes, categoryFilter, activityFilter, location}) => {
   return <ResultsTabs categoryFilter={categoryFilter} activityFilter={activityFilter} classes={classes} location={location}/>
@@ -31,17 +32,18 @@ class ResultsTabs extends React.Component {
     L.Icon.Default.imagePath = 'images/'
   }*/
 
+
+
   classPopup(clazz) {
-    return '<Row className="show-grid"> \
-      <Col lg={8} md={8}> \
-    <Accordion> \
-      <Panel header="Description" eventKey="1"> \
-        ' + clazz.activity + ' \
-      </Panel> \
-      <Panel header="Activity" eventKey="2"> \
-        ' + clazz.category + ' \
-      </Panel> \
-    </Accordion></Col></Row>'
+    <Marker position={[clazz.location.lat, clazz.location.lng]}>
+      <Popup>
+        <Accordion eventKey="description">
+          <Panel header="Description">one</Panel>
+          <Panel eventKey="schedule" header="Schedule">Two</Panel>
+
+          </Accordion>
+      </Popup>
+    </Marker>
   }
 
   render() {
@@ -64,11 +66,7 @@ class ResultsTabs extends React.Component {
         <Tab eventKey={"map"} title="Map">
           <Map center={[this.props.location.lat, this.props.location.lng]} zoom={13}>
             <TileLayer url='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'/>
-            <Marker position={[this.props.location.lat, this.props.location.lng]}>
-              <Popup>
-                <Accordion><Panel header="blah">one</Panel><Panel header="blah 2">Two</Panel></Accordion>
-              </Popup>
-            </Marker>
+            <MyMarkersList markers={this.props.classes} />
           </Map>
         </Tab>
         <Tab eventKey={"list"} title="List"><ListOfClasses classes={filtered}/></Tab>
