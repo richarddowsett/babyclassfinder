@@ -36,8 +36,8 @@ lng: 456
 function location(state, action) {
   if (typeof state === 'undefined')
     return {
-      lat: 123,
-      lng: 456
+      lat: 51.63809879999999,
+      lng: 0.34299379999993107
     }
   switch (action.type) {
     case "UPDATE_LOCATION":
