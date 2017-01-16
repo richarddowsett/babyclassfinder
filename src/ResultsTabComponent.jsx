@@ -4,9 +4,7 @@ import {createLoadAllClasses} from './ActionTypes';
 import './App.css';
 /*import 'leaflet/dist/leaflet.js';*/
 import L from 'leaflet'
-import 'leaflet-sidebar-v2'
 import 'leaflet/dist/leaflet.css';
-import 'leaflet-sidebar-v2/css/leaflet-sidebar.min.css'
 import 'leaflet-search/dist/leaflet-search.min.css'
 import {connect} from 'react-redux'
 
