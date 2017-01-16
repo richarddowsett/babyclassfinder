@@ -3,12 +3,12 @@ import {Tabs, Tab, Accordion, Panel} from 'react-bootstrap';
 import {createLoadAllClasses} from './ActionTypes';
 import './App.css';
 /*import 'leaflet/dist/leaflet.js';*/
-import L from 'leaflet/dist/leaflet.js'
-import {Map, Marker, Popup, TileLayer} from 'react-leaflet';
+import L from 'leaflet'
+import 'leaflet-sidebar-v2'
 import 'leaflet/dist/leaflet.css';
+import 'leaflet-sidebar-v2/css/leaflet-sidebar.min.css'
 import 'leaflet-search/dist/leaflet-search.min.css'
 import {connect} from 'react-redux'
-import {MyMarkersList, MyPopupMarker} from './Marker'
 
 const resultsTabsFunc = ({classes, categoryFilter, activityFilter, location}) => {
   return <ResultsTabs categoryFilter={categoryFilter} activityFilter={activityFilter} classes={classes} location={location}/>
@@ -46,6 +46,21 @@ class ResultsTabs extends React.Component {
     </Marker>
   }
 
+  componentDidMount() {
+    var map = L.map('map').setView([this.props.location.lat, this.props.location.lng], 13);
+    L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+}).addTo(map);
+var sidebar = L.control.sidebar('sidebar').addTo(map);
+var panelContent = {
+    id: 'userinfo',                     // UID, used to access the panel
+    tab: '<i class="fa fa-gear"></i>',  // content can be passed as HTML string,
+    pane: "<h1>blah</h1>",        // DOM elements can be passed, too
+    position: 'bottom'                  // vertical alignment, 'top' or 'bottom'
+};
+sidebar.addPanel(panelContent);
+  }
+
   render() {
     /* move this to mapStateToProps */
     var categoryFilter = this.props.categoryFilter
@@ -61,13 +76,11 @@ class ResultsTabs extends React.Component {
       return activityFilter.indexOf(c.activity) > -1
     })
     console.log('filtered -> ' + filtered)
+
     return (
       <Tabs activeKey={this.state.key} onSelect={this.handleSelect} id="controlled-tab-example">
         <Tab eventKey={"map"} title="Map">
-          <Map center={[this.props.location.lat, this.props.location.lng]} zoom={13}>
-            <TileLayer url='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'/>
-            <MyMarkersList markers={this.props.classes} />
-          </Map>
+          <div id="map"/>
         </Tab>
         <Tab eventKey={"list"} title="List"><ListOfClasses classes={filtered}/></Tab>
       </Tabs>

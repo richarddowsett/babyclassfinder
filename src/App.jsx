@@ -12,6 +12,9 @@ import {
 } from 'react-bootstrap';
 import ReactCollapse from 'react-collapse';
 import './App.css';
+// import './css/leaflet.extra-markers.min.css'
+// import './js/leaflet.extra-markers.min.js'
+import L from 'leaflet/dist/leaflet.js'
 import 'leaflet/dist/leaflet.css';
 import {toggleCategory, toggleActivity} from './ActionTypes'
 import {createLoadAllClasses, fetchClasses} from './ActionTypes'
