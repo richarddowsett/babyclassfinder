@@ -15,7 +15,7 @@ export class AppJumbotron extends Component {
   render() {
     return (
       <Jumbotron>
-        <Grid>systm
+        <Grid>
           <h1>Baby Class Finder</h1>
         </Grid>
       </Jumbotron>

@@ -1,27 +1,17 @@
 import React, {Component} from 'react';
 import {
-  Grid,
   Row,
-  Col,
-  Navbar,
-  Jumbotron,
-  Nav,
-  NavItem,
-  MenuItem,
-  NavDropdown
+  Col
 } from 'react-bootstrap';
 import ReactCollapse from 'react-collapse';
 import './App.css';
-// import './css/leaflet.extra-markers.min.css'
-// import './js/leaflet.extra-markers.min.js'
-import L from 'leaflet/dist/leaflet.js'
 import 'leaflet/dist/leaflet.css';
 import {toggleCategory, toggleActivity} from './ActionTypes'
-import {createLoadAllClasses, fetchClasses} from './ActionTypes'
+import {fetchClasses} from './ActionTypes'
 import ResultsTabsComponent from './ResultsTabComponent'
 import FilterBarComponent from './FilterBarComponent'
 import {connect} from 'react-redux'
-import {AppNav, AppJumbotron} from './Util'
+import {AppJumbotron} from './Util'
 
 function appFunc(dispatchFetchClasses){
   return <App fetchClasses={dispatchFetchClasses}/>
@@ -59,7 +49,6 @@ class App extends Component {
   render() {
     return (
       <div>
-        <AppNav/>
         <Row className="show-grid">
           <Col xs={3} md={3}></Col>
           <Col xs={12} md={8} lg={8} lgPull={1} mdPull={1}><AppJumbotron/>
@@ -136,7 +125,7 @@ class Content extends React.Component {
       <Col lgPush={2} lg={8} lgPull={2} md={8} mdPush={2} mdPull={2}>
         <Row>
           <Col>
-            <a href="#" onClick={this.toggleFilter}>Filter</a>
+            <a href="#" onClick={this.toggleFilter}><span className="glyphicon glyphicon-filter" aria-hidden="true"></span></a>
           </Col>
         </Row>
         <ReactCollapse isOpened={this.state.filterOpen}>

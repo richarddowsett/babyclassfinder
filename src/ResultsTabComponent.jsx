@@ -1,12 +1,12 @@
 import React from 'react';
 import {Tabs, Tab, Accordion, Panel} from 'react-bootstrap';
-import {createLoadAllClasses} from './ActionTypes';
 import './App.css';
 /*import 'leaflet/dist/leaflet.js';*/
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-search/dist/leaflet-search.min.css'
 import {connect} from 'react-redux'
+import {Marker} from './Marker'
 
 const resultsTabsFunc = ({classes, categoryFilter, activityFilter, location}) => {
   return <ResultsTabs categoryFilter={categoryFilter} activityFilter={activityFilter} classes={classes} location={location}/>
@@ -49,14 +49,6 @@ class ResultsTabs extends React.Component {
     L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
-var sidebar = L.control.sidebar('sidebar').addTo(map);
-var panelContent = {
-    id: 'userinfo',                     // UID, used to access the panel
-    tab: '<i class="fa fa-gear"></i>',  // content can be passed as HTML string,
-    pane: "<h1>blah</h1>",        // DOM elements can be passed, too
-    position: 'bottom'                  // vertical alignment, 'top' or 'bottom'
-};
-sidebar.addPanel(panelContent);
   }
 
   render() {
