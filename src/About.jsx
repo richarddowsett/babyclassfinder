@@ -3,7 +3,7 @@ import logo from './logo.svg';
 import {Grid, Navbar, Jumbotron, Button, Nav, NavItem, MenuItem, NavDropdown} from 'react-bootstrap';
 import './App.css';
 
-class About extends Component {
+export class About extends Component {
   render() {
     return (
       <div>

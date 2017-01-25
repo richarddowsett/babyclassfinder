@@ -7,6 +7,7 @@ import 'leaflet/dist/leaflet.css';
 import 'leaflet-search/dist/leaflet-search.min.css'
 import {connect} from 'react-redux'
 import {Marker} from './Marker'
+import {About} from './About'
 
 const resultsTabsFunc = ({classes, categoryFilter, activityFilter, location}) => {
   return <ResultsTabs categoryFilter={categoryFilter} activityFilter={activityFilter} classes={classes} location={location}/>
@@ -73,6 +74,7 @@ class ResultsTabs extends React.Component {
           <div id="map"/>
         </Tab>
         <Tab eventKey={"list"} title="List"><ListOfClasses classes={filtered}/></Tab>
+        <Tab eventKey={"about"} title="About"><About/></Tab>
       </Tabs>
     );
   }

@@ -122,7 +122,7 @@ class Content extends React.Component {
 
   render() {
     return (
-      <Col lgPush={2} lg={8} lgPull={2} md={8} mdPush={2} mdPull={2}>
+      <Col lgPush={1} lg={10} lgPull={1} md={10} mdPush={1} mdPull={1}>
         <Row>
           <Col>
             <a href="#" onClick={this.toggleFilter}><span className="glyphicon glyphicon-filter" aria-hidden="true"></span></a>
