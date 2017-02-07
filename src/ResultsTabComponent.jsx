@@ -5,6 +5,8 @@ import './App.css';
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-search/dist/leaflet-search.min.css'
+import 'leaflet-awesome-markers/dist/leaflet.awesome-markers.css'
+import {icon} from 'leaflet-awesome-markers/dist/leaflet.awesome-markers.js'
 import {connect} from 'react-redux'
 import {Marker} from './Marker'
 import {About} from './About'
@@ -50,6 +52,11 @@ class ResultsTabs extends React.Component {
     L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
+var redMarker = new L.AwesomeMarkers.Icon({
+    icon: '	glyphicon glyphicon-pushpin',
+    markerColor: 'red'
+  });
+  L.marker([this.props.location.lat, this.props.location.lng], {icon: redMarker}).addTo(map);
   }
 
   render() {

@@ -163,7 +163,8 @@ function updateAdmin(state, action){
           addressVerified: true,
           addressVerificationError: false,
           adminFailed: false,
-          classAdded: true
+          classAdded: true,
+          location : state.location
         })
       case ADDRESS_VERIFIED:
       console.log("received ADDRESS_VERIFIED")

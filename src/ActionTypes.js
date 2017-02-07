@@ -15,7 +15,8 @@ export const ADMIN_CREATION_FAILED = 'ADMIN_CREATION_FAILED'
 
 export function createVerifyAddress(address) {
 	return function(dispatch) {
-		var addressString = address.house + ',' + address.city + ',' + "essex" // add county to address
+		var addressString = address.house + ',' + address.city + ',' + "essex,"+address.postcode // add county to address
+		console.log('looking for ' + addressString)
 		var requestBody = {
 			address: addressString
 		}
@@ -29,6 +30,7 @@ export function createVerifyAddress(address) {
 					dispatch(createAddressVerified(results[0]))
 				} else {
 					console.log("found more than one result for request: " + requestBody + " with status: " + status)
+					console.log(results)
 					dispatch(createAddressVerificationFailed())
 				}
 			} else {
